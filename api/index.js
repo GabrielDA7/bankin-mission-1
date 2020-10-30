@@ -1,9 +1,9 @@
-const accountApi = require('./account');
-const authApi = require('./auth');
-const transactionApi = require('./transaction');
+const accountApi = require("./account");
+const authApi = require("./auth");
+const transactionApi = require("./transaction");
 
 module.exports = {
-    accountApi,
-    authApi,
-    transactionApi
-}
+	accountApi,
+	authApi,
+	transactionApi,
+};

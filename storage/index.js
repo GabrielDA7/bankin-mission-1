@@ -1,3 +1,3 @@
 module.exports = {
-    accessToken: null
-}
+	accessToken: null,
+};

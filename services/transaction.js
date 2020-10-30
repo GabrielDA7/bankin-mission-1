@@ -1,20 +1,46 @@
+const { transactionApi } = require("../api");
+const { deleteItemsObjectExistingInAnotherArrayByKey } = require("../helpers");
 
-const {transactionApi} = require('../api');
+async function getAllAccountTransactionsPages(
+	accountNumber,
+	link = null,
+	previousTransactions = []
+) {
+	try {
+		const pageTransactionsData = await transactionApi.getAllTransactions(
+			link || `/accounts/${accountNumber}/transactions`
+		);
 
-async function getAllTransactionsPages(accountNumber, link = null, transactions = []) {
-    if(!accountNumber) {
-        throw new Error("Account number is required");
-    }
+		if (!pageTransactionsData.transactions)
+			pageTransactionsData.transactions = [];
 
-    const pageTransactionsData = await transactionApi.getAllTransactions(link || `/accounts/${accountNumber}/transactions`);
-    transactions = [...transactions, ...pageTransactionsData.transactions];
-    if(!pageTransactionsData.link.next) {
-        return transactions;
-    }
+		const uniquePageTransactions = deleteItemsObjectExistingInAnotherArrayByKey(
+			previousTransactions,
+			pageTransactionsData.transactions,
+			"id"
+		);
 
-    return getAllTransactionsPages(accountNumber, pageTransactionsData.link.next, transactions);
+		const currentTransactions = [
+			...previousTransactions,
+			...uniquePageTransactions,
+		];
+
+		if (!pageTransactionsData.link || !pageTransactionsData.link.next)
+			return currentTransactions;
+
+		return getAllAccountTransactionsPages(
+			accountNumber,
+			pageTransactionsData.link.next,
+			currentTransactions
+		);
+	} catch (error) {
+		console.log(
+			`An error occurred during the retrieval of the transactions of account n°${accountNumber}`
+		);
+		return [];
+	}
 }
 
 module.exports = {
-    getAllTransactionsPages
-}
+	getAllAccountTransactionsPages,
+};
