@@ -28,7 +28,7 @@ async function getAllAccountTransactionsPages(
 		if (!pageTransactionsData.link || !pageTransactionsData.link.next)
 			return currentTransactions;
 
-		return getAllAccountTransactionsPages(
+		return await getAllAccountTransactionsPages(
 			accountNumber,
 			pageTransactionsData.link.next,
 			currentTransactions

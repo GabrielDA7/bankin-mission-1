@@ -17,7 +17,7 @@ async function getAllAccountsPages(link = null, previousAccounts = []) {
 	if (!pageAccountsData.link || !pageAccountsData.link.next)
 		return currentAccounts;
 
-	return getAllAccountsPages(pageAccountsData.link.next, currentAccounts);
+	return await getAllAccountsPages(pageAccountsData.link.next, currentAccounts);
 }
 
 async function getAccountsDetails() {
